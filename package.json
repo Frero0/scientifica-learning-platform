@@ -12,7 +12,7 @@
     "build": "dotenv -e .env -- turbo build",
     "lint": "turbo lint",
     "typecheck": "turbo typecheck",
-    "format": "prettier --write \"**/*.{ts,tsx,js,cjs,mjs,json,md,css,yml,yaml,prisma}\"",
+    "format": "prettier --write \"**/*.{ts,tsx,js,cjs,mjs,json,md,css,yml,yaml}\" && pnpm --filter @scientifica/db exec prisma format --schema prisma/schema.prisma",
     "db:generate": "dotenv -e .env -- pnpm --filter @scientifica/db prisma:generate",
     "db:migrate": "dotenv -e .env -- pnpm --filter @scientifica/db prisma:migrate",
     "db:seed": "dotenv -e .env -- pnpm --filter @scientifica/db prisma:seed",

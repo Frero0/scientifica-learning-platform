@@ -13,7 +13,10 @@ export function SiteHeader() {
           </span>
           <span>Scientifica</span>
         </Link>
-        <nav aria-label="Primary" className="hidden items-center gap-6 text-sm font-medium text-ink/70 sm:flex">
+        <nav
+          aria-label="Primary"
+          className="hidden items-center gap-6 text-sm font-medium text-ink/70 sm:flex"
+        >
           <Link className="transition hover:text-ink" href="/courses">
             Courses
           </Link>

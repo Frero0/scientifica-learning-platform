@@ -117,8 +117,7 @@ async function main(): Promise<void> {
                         type: ExerciseType.NUMERIC_INPUT,
                         prompt:
                           "A pendulum has a length of 1 meter. Using T = 2*pi*sqrt(L/g) with g = 9.8 m/s^2, estimate the period in seconds.",
-                        explanation:
-                          "T = 2*pi*sqrt(1 / 9.8), which is approximately 2.0 seconds.",
+                        explanation: "T = 2*pi*sqrt(1 / 9.8), which is approximately 2.0 seconds.",
                         answer: {
                           value: 2,
                           tolerance: 0.15

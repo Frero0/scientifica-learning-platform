@@ -41,8 +41,8 @@ export default async function CourseDetailPage({ params }: CourseDetailPageProps
           <div className="rounded-lg bg-ink p-6 text-white shadow-soft">
             <p className="text-sm font-medium text-white/60">Path principle</p>
             <p className="mt-4 text-2xl font-semibold leading-9">
-              Observe first, model second, test always. Each lesson asks learners to act on the
-              idea before reading a final explanation.
+              Observe first, model second, test always. Each lesson asks learners to act on the idea
+              before reading a final explanation.
             </p>
           </div>
         </div>
@@ -52,9 +52,13 @@ export default async function CourseDetailPage({ params }: CourseDetailPageProps
             <section key={module.id}>
               <div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
                 <div>
-                  <p className="text-sm font-semibold uppercase text-copper">Module {module.order}</p>
+                  <p className="text-sm font-semibold uppercase text-copper">
+                    Module {module.order}
+                  </p>
                   <h2 className="mt-2 text-3xl font-semibold text-ink">{module.title}</h2>
-                  <p className="mt-2 max-w-2xl text-base leading-7 text-ink/60">{module.description}</p>
+                  <p className="mt-2 max-w-2xl text-base leading-7 text-ink/60">
+                    {module.description}
+                  </p>
                 </div>
               </div>
               <div className="space-y-4">

@@ -15,7 +15,9 @@ export default async function CoursesPage() {
       <div className="mx-auto max-w-7xl">
         <div className="max-w-3xl">
           <p className="text-sm font-semibold uppercase text-teal-700">Course catalog</p>
-          <h1 className="mt-3 text-5xl font-semibold leading-tight text-ink">Build scientific fluency by solving.</h1>
+          <h1 className="mt-3 text-5xl font-semibold leading-tight text-ink">
+            Build scientific fluency by solving.
+          </h1>
           <p className="mt-5 text-lg leading-8 text-ink/65">
             Start with the seeded foundation path. The structure is ready for more courses,
             simulations, and adaptive practice.

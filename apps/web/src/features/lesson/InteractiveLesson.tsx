@@ -130,7 +130,9 @@ export function InteractiveLesson({ initialProgress, lesson }: InteractiveLesson
               setFeedback(null);
             }}
             onStepChange={(stepIndex, value) => {
-              setAnswerState((current) => withStepAnswer(current, currentExercise, stepIndex, value));
+              setAnswerState((current) =>
+                withStepAnswer(current, currentExercise, stepIndex, value)
+              );
               setFeedback(null);
             }}
           />
@@ -168,7 +170,11 @@ export function InteractiveLesson({ initialProgress, lesson }: InteractiveLesson
                 Score {feedback.score}
               </span>
               {currentIndex < lesson.exercises.length - 1 && feedback.correct ? (
-                <Button onClick={() => goToExercise(currentIndex + 1)} size="sm" variant="secondary">
+                <Button
+                  onClick={() => goToExercise(currentIndex + 1)}
+                  size="sm"
+                  variant="secondary"
+                >
                   Next exercise
                   <ArrowRight aria-hidden="true" className="h-4 w-4" />
                 </Button>

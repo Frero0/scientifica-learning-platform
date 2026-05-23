@@ -1,10 +1,18 @@
-import type { Exercise, ExerciseAnswer, ExerciseEvaluation, NumericAnswer } from "../models/exercise";
+import type {
+  Exercise,
+  ExerciseAnswer,
+  ExerciseEvaluation,
+  NumericAnswer
+} from "../models/exercise";
 
-export function evaluateExerciseAttempt(exercise: Exercise, submittedAnswer: unknown): ExerciseEvaluation {
+export function evaluateExerciseAttempt(
+  exercise: Exercise,
+  submittedAnswer: unknown
+): ExerciseEvaluation {
   const correct = isCorrectAnswer(exercise, submittedAnswer);
   const score = correct ? exercise.points : 0;
   const feedback = correct
-    ? exercise.explanation ?? "Correct. Your answer matches the underlying model."
+    ? (exercise.explanation ?? "Correct. Your answer matches the underlying model.")
     : buildIncorrectFeedback(exercise);
 
   if (correct) {

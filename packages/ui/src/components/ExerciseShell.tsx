@@ -12,7 +12,14 @@ export type ExerciseShellProps = {
   className?: string;
 };
 
-export function ExerciseShell({ aside, children, className, eyebrow, prompt, title }: ExerciseShellProps) {
+export function ExerciseShell({
+  aside,
+  children,
+  className,
+  eyebrow,
+  prompt,
+  title
+}: ExerciseShellProps) {
   return (
     <section className={cn("grid gap-6 lg:grid-cols-[minmax(0,1fr)_18rem]", className)}>
       <div className="rounded-lg border border-ink/10 bg-white p-5 shadow-[0_18px_50px_rgba(20,22,20,0.06)] sm:p-6">

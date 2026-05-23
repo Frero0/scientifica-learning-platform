@@ -13,7 +13,13 @@ const statusStyles: Record<FeedbackPanelProps["status"], string> = {
   neutral: "border-ink/10 bg-stone-50 text-ink"
 };
 
-export function FeedbackPanel({ children, className, status, title, ...props }: FeedbackPanelProps) {
+export function FeedbackPanel({
+  children,
+  className,
+  status,
+  title,
+  ...props
+}: FeedbackPanelProps) {
   return (
     <div className={cn("rounded-lg border p-4", statusStyles[status], className)} {...props}>
       <h3 className="font-semibold">{title}</h3>

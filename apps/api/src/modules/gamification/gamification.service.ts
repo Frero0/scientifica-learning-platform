@@ -17,7 +17,9 @@ export class GamificationService {
     return achievements.map((achievement) => this.toDto(achievement));
   }
 
-  private toDto(record: Awaited<ReturnType<GamificationRepository["findUserAchievements"]>>[number]): AchievementDto {
+  private toDto(
+    record: Awaited<ReturnType<GamificationRepository["findUserAchievements"]>>[number]
+  ): AchievementDto {
     return {
       id: record.achievement.id,
       key: record.achievement.key,

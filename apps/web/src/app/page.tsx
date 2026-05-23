@@ -29,7 +29,12 @@ export default function HomePage() {
                   <ArrowRight aria-hidden="true" className="h-5 w-5" />
                 </Link>
               </Button>
-              <Button asChild className="border-white/20 bg-white/5 text-white hover:bg-white/10" size="lg" variant="secondary">
+              <Button
+                asChild
+                className="border-white/20 bg-white/5 text-white hover:bg-white/10"
+                size="lg"
+                variant="secondary"
+              >
                 <Link href="/lessons/demo">
                   Try the demo
                   <FlaskConical aria-hidden="true" className="h-5 w-5" />
@@ -86,7 +91,9 @@ export default function HomePage() {
             <div className="rounded-lg bg-ink p-5 text-white">
               <div className="flex items-center justify-between">
                 <span className="text-sm text-white/55">Demo lesson</span>
-                <span className="rounded-full bg-white/10 px-3 py-1 text-sm text-white/70">12 min</span>
+                <span className="rounded-full bg-white/10 px-3 py-1 text-sm text-white/70">
+                  12 min
+                </span>
               </div>
               <div className="mt-10 space-y-4">
                 <div className="h-3 w-24 rounded-full bg-teal-300" />

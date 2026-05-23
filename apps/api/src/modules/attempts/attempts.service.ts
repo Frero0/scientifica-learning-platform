@@ -57,7 +57,9 @@ export class AttemptsService {
       correct: evaluation.correct,
       score: evaluation.score,
       feedback: evaluation.feedback,
-      ...(evaluation.expectedAnswer !== undefined ? { expectedAnswer: evaluation.expectedAnswer } : {}),
+      ...(evaluation.expectedAnswer !== undefined
+        ? { expectedAnswer: evaluation.expectedAnswer }
+        : {}),
       progress
     };
   }

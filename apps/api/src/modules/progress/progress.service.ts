@@ -40,8 +40,11 @@ export class ProgressService {
     ]);
 
     const percent =
-      totalExercises > 0 ? Math.min(100, Math.round((completedExercises / totalExercises) * 100)) : 0;
-    const status = completedExercises >= totalExercises && totalExercises > 0 ? "completed" : "in_progress";
+      totalExercises > 0
+        ? Math.min(100, Math.round((completedExercises / totalExercises) * 100))
+        : 0;
+    const status =
+      completedExercises >= totalExercises && totalExercises > 0 ? "completed" : "in_progress";
 
     const progress = await this.progressRepository.upsertLessonProgress({
       userId: input.userId,

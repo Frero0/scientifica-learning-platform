@@ -57,7 +57,9 @@ export function toDomainExercise(record: PrismaExercise): Exercise {
 
 export function toPublicExercise(record: PrismaExercise): PublicExerciseDto {
   const domainExercise = toDomainExercise(record);
-  const publicSteps = domainExercise.steps?.map(({ expectedAnswer: _expectedAnswer, ...step }) => step);
+  const publicSteps = domainExercise.steps?.map(
+    ({ expectedAnswer: _expectedAnswer, ...step }) => step
+  );
 
   return {
     id: domainExercise.id,

@@ -8,7 +8,10 @@ type LessonExperienceProps = {
 };
 
 export async function LessonExperience({ lessonId }: LessonExperienceProps) {
-  const [lesson, progress] = await Promise.all([getLessonById(lessonId), getUserProgress("demo-user")]);
+  const [lesson, progress] = await Promise.all([
+    getLessonById(lessonId),
+    getUserProgress("demo-user")
+  ]);
   const lessonProgress = progress.items.find((item) => item.lessonId === lesson.id);
 
   return (
@@ -22,7 +25,9 @@ export async function LessonExperience({ lessonId }: LessonExperienceProps) {
           </div>
           <div className="rounded-lg border border-ink/10 bg-white p-5 shadow-soft">
             <p className="text-sm font-medium text-ink/55">Core idea</p>
-            <p className="mt-2 text-xl font-semibold leading-8 text-ink">{lesson.content.introduction}</p>
+            <p className="mt-2 text-xl font-semibold leading-8 text-ink">
+              {lesson.content.introduction}
+            </p>
           </div>
         </div>
 

@@ -7,7 +7,8 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Scientifica",
-  description: "Interactive scientific learning, visual explanations, and progressive problem solving."
+  description:
+    "Interactive scientific learning, visual explanations, and progressive problem solving."
 };
 
 export default function RootLayout({
