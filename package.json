@@ -15,6 +15,7 @@
     "format": "prettier --write \"**/*.{ts,tsx,js,cjs,mjs,json,md,css,yml,yaml}\" && pnpm --filter @scientifica/db exec prisma format --schema prisma/schema.prisma",
     "db:generate": "dotenv -e .env -- pnpm --filter @scientifica/db prisma:generate",
     "db:migrate": "dotenv -e .env -- pnpm --filter @scientifica/db prisma:migrate",
+    "db:migrate:dev": "dotenv -e .env -- pnpm --filter @scientifica/db prisma:migrate:dev",
     "db:seed": "dotenv -e .env -- pnpm --filter @scientifica/db prisma:seed",
     "db:studio": "dotenv -e .env -- pnpm --filter @scientifica/db prisma:studio"
   },

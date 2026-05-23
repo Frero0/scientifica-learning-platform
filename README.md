@@ -11,11 +11,11 @@ Production-oriented starter for an interactive scientific learning platform. It 
 - `packages/ui` - reusable Tailwind UI components.
 - `packages/config` - shared TypeScript, ESLint, and Prettier config.
 
-## Setup
+## Local Development
 
 ```bash
 cp .env.example .env
-pnpm install
+pnpm install --frozen-lockfile
 docker compose up -d
 pnpm db:generate
 pnpm db:migrate
@@ -25,6 +25,14 @@ pnpm dev
 
 The web app runs at `http://localhost:3000`.
 The API runs at `http://localhost:4000`.
+
+Required environment variables are documented in `.env.example`:
+
+- `DATABASE_URL` - PostgreSQL connection string used by Prisma and the API.
+- `API_BASE_URL` - server-side URL used by the Next.js app to call the Nest API.
+- `NEXT_PUBLIC_API_BASE_URL` - browser-visible API URL, reserved for client-side use.
+- `WEB_ORIGIN` - allowed CORS origin for the API.
+- `PORT` - API port, defaulting to `4000`.
 
 ## Local Development Commands
 
@@ -41,7 +49,8 @@ pnpm format       # format source, docs, config, and Prisma files
 ```bash
 docker compose up -d
 pnpm db:generate
-pnpm db:migrate
+pnpm db:migrate      # apply committed Prisma migrations
+pnpm db:migrate:dev  # create a new migration after schema changes
 pnpm db:seed
 pnpm db:studio
 ```
