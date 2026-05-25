@@ -1,30 +1,136 @@
 # Architecture
 
-Scientifica is split into apps and packages to keep product surfaces independent from core learning logic.
+Scientifica is a pnpm/Turborepo monorepo with a Next.js web app, a NestJS API, a
+Prisma/PostgreSQL persistence package, and small shared packages for domain, UI, and
+configuration.
 
-## Boundaries
+This shape is intentionally a little more structured than a single Next.js app because the product
+is expected to grow into an interactive learning platform with reusable exercise logic, API
+orchestration, data persistence, authoring workflows, and possibly additional clients later.
 
-`packages/domain` owns framework-agnostic models and exercise evaluation. It must not import Prisma, NestJS, React, or browser APIs.
+## Current Decision
 
-`packages/db` owns persistence. Prisma models can evolve for database needs, but API services map them into domain or DTO shapes rather than exposing database records directly.
+Keep the monorepo.
 
-`apps/api` owns application orchestration. Controllers validate and route requests, services coordinate workflows, and repositories isolate Prisma queries.
+The monorepo is justified for this product because learning models, exercise evaluation, database
+access, API orchestration, and UI rendering have different change pressures. Keeping those seams
+visible now prevents the web app from becoming the owner of business logic and keeps the domain
+portable for tests, background jobs, authoring tools, or future clients.
 
-`apps/web` owns presentation and user interaction. React components do not evaluate answers or update progress directly; they call the API and render returned state.
+The risk is overengineering: packages must stay small and useful. Do not add shared packages,
+generic abstractions, queues, workers, auth layers, or design-system machinery until a concrete
+feature needs them.
 
-`packages/ui` owns reusable presentational components. Components accept typed props, expose accessible controls, and avoid product-specific business decisions.
+## Structure
 
-## Request Flow
+- `apps/web` - Next.js App Router frontend. Owns routes, layout, server components, client
+  interactions, and calls to API-facing route handlers.
+- `apps/api` - NestJS REST API. Owns controllers, validation, application services, repositories,
+  DTO mapping, and orchestration across persistence and domain logic.
+- `packages/domain` - Framework-agnostic learning models and exercise evaluation. Owns pure
+  TypeScript logic that must not depend on React, NestJS, Prisma, Node-only APIs, browser APIs, or
+  environment variables.
+- `packages/db` - Prisma schema, migrations, Prisma client exports, and seed data. Owns persistence
+  structure only.
+- `packages/ui` - Reusable presentational React components and small UI utilities. Owns UI building
+  blocks, not product workflows or data fetching.
+- `packages/config` - Shared TypeScript, ESLint, and Prettier configuration.
+- `docs` - Product and technical documentation that captures current decisions.
 
-1. A learner opens a lesson in `apps/web`.
-2. Server components load lesson and progress data from `apps/api`.
-3. The interactive client component submits an answer to a Next route handler.
-4. The route handler forwards the request to the Nest API.
-5. The attempts service loads the exercise, calls `evaluateExerciseAttempt` from `packages/domain`, stores the attempt, updates progress, and unlocks achievements.
-6. The frontend renders feedback and updated progress.
+## Dependency Boundaries
 
-## Scalability Notes
+Healthy dependencies:
 
-- Add new exercise types in the domain first, then add API mappers and UI renderers.
-- Keep Prisma relations optimized for API use cases through repository-level includes and selects.
-- Add background workers later for recommendations, spaced repetition, and content analytics without moving domain logic into the web app.
+- `apps/web` can depend on `packages/ui` and type-only or model exports from `packages/domain`.
+- `apps/api` can depend on `packages/db` and `packages/domain`.
+- `packages/db` can depend on Prisma only.
+- `packages/ui` can depend on React-compatible UI utilities and must stay presentation-focused.
+- `packages/domain` should have no local workspace dependencies.
+- `packages/config` should not depend on application code.
+
+Avoid these dependencies:
+
+- `packages/domain` importing Prisma, NestJS, React, browser APIs, or environment variables.
+- `apps/web` importing `packages/db` or Prisma directly.
+- `packages/ui` importing API clients, Prisma types, product repositories, or learning workflows.
+- `packages/db` importing API services, web components, or UI code.
+- API controllers returning raw Prisma records when DTOs or domain-facing mappings are needed.
+
+## Runtime Flow
+
+1. A learner opens a route in `apps/web`.
+2. Server components or route handlers call the configured API base URL.
+3. The Nest API validates requests in controllers.
+4. API services coordinate repository reads/writes and domain logic.
+5. Repositories isolate Prisma queries and persistence-specific shape.
+6. Domain functions such as `evaluateExerciseAttempt` evaluate learning logic without framework
+   dependencies.
+7. API services persist attempts, progress, and achievements, then return DTOs.
+8. The frontend renders returned state and does not evaluate answers directly.
+
+The current interactive lesson flow uses a Next route handler as a frontend boundary for attempt
+submission, then forwards the request to the Nest API.
+
+## Local Runtime
+
+Local development uses PostgreSQL from Docker Compose and the committed Prisma migrations.
+
+```bash
+cp .env.example .env
+pnpm install --frozen-lockfile
+docker compose up -d
+pnpm db:generate
+pnpm db:migrate
+pnpm db:seed
+pnpm dev
+```
+
+Default local endpoints:
+
+- Web: `http://localhost:3000`
+- API: `http://localhost:4000`
+- Health: `http://localhost:4000/health`
+
+Use `pnpm db:migrate` to apply committed migrations. Use `pnpm db:migrate:dev` only when changing
+the Prisma schema and creating a new migration intentionally.
+
+## Quality Gates
+
+Root scripts are the source of truth:
+
+```bash
+pnpm lint
+pnpm typecheck
+pnpm test
+pnpm build
+```
+
+CI runs on push and pull request. It installs dependencies with a frozen lockfile, starts a
+PostgreSQL service container, generates Prisma client code, applies migrations, seeds the database,
+then runs tests, lint, typecheck, and build.
+
+Current tests are intentionally small:
+
+- Domain unit tests cover `evaluateExerciseAttempt`.
+- API smoke tests verify `/health` and the seeded database-backed path through `/courses`,
+  `/lessons/:id`, `/attempts`, and `/progress/:userId`.
+
+## Product Architecture Principles
+
+- Add learning behavior in `packages/domain` first when it can be expressed as pure logic.
+- Add persistence changes in `packages/db` with migrations and keep database records behind API
+  repository boundaries.
+- Add API workflows in `apps/api` through controllers, services, repositories, schemas, and DTOs.
+- Add frontend behavior in `apps/web`; keep data fetching and mutation paths explicit.
+- Promote UI to `packages/ui` only when it is reusable and presentation-only.
+- Prefer focused tests at the package boundary where the behavior lives.
+- Keep the monorepo boring: no new package, dependency, or abstraction without a concrete need.
+
+## Current Gaps
+
+- API database-backed tests currently cover the seeded happy path only, not validation or error
+  cases.
+- There is no browser e2e suite.
+- Authentication and authorization are not implemented.
+- Background jobs, authoring tools, analytics, and AI tutor capabilities are intentionally out of
+  scope for the current baseline.

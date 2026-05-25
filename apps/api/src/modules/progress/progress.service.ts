@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
 
 import {
   toDomainProgressStatus,
@@ -16,7 +16,9 @@ import type {
 @Injectable()
 export class ProgressService {
   constructor(
+    @Inject(ProgressRepository)
     private readonly progressRepository: ProgressRepository,
+    @Inject(GamificationService)
     private readonly gamificationService: GamificationService
   ) {}
 

@@ -1,11 +1,11 @@
-import { Injectable } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
 import type { Prisma } from "@scientifica/db";
 
 import { PrismaService } from "../../common/prisma/prisma.service";
 
 @Injectable()
 export class AttemptsRepository {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(@Inject(PrismaService) private readonly prisma: PrismaService) {}
 
   ensureDemoUser(userId: string) {
     return this.prisma.user.upsert({

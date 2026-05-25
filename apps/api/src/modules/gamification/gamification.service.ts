@@ -1,11 +1,14 @@
-import { Injectable } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
 
 import { GamificationRepository } from "./gamification.repository";
 import type { AchievementDto } from "./gamification.types";
 
 @Injectable()
 export class GamificationService {
-  constructor(private readonly gamificationRepository: GamificationRepository) {}
+  constructor(
+    @Inject(GamificationRepository)
+    private readonly gamificationRepository: GamificationRepository
+  ) {}
 
   async awardAchievement(userId: string, key: string): Promise<AchievementDto | null> {
     const award = await this.gamificationRepository.awardIfMissing(userId, key);

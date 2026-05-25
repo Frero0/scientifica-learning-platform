@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
 import type { Prisma } from "@scientifica/db";
 
 import { PrismaService } from "../../common/prisma/prisma.service";
@@ -31,7 +31,7 @@ export type CourseWithPath = Prisma.CourseGetPayload<{
 
 @Injectable()
 export class CoursesRepository {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(@Inject(PrismaService) private readonly prisma: PrismaService) {}
 
   findAll(): Promise<CourseWithPath[]> {
     return this.prisma.course.findMany({

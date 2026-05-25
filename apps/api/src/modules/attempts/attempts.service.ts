@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
 import { evaluateExerciseAttempt } from "@scientifica/domain";
 
 import { ExercisesService } from "../exercises/exercises.service";
@@ -21,8 +21,11 @@ export type SubmitAttemptResultDto = {
 @Injectable()
 export class AttemptsService {
   constructor(
+    @Inject(AttemptsRepository)
     private readonly attemptsRepository: AttemptsRepository,
+    @Inject(ExercisesService)
     private readonly exercisesService: ExercisesService,
+    @Inject(ProgressService)
     private readonly progressService: ProgressService
   ) {}
 

@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { Inject, Injectable, NotFoundException } from "@nestjs/common";
 
 import { toDomainCourseLevel } from "../../common/mappers/prisma-domain.mapper";
 import { CoursesRepository } from "./courses.repository";
@@ -7,7 +7,7 @@ import type { CourseDetailDto, CourseSummaryDto } from "./courses.types";
 
 @Injectable()
 export class CoursesService {
-  constructor(private readonly coursesRepository: CoursesRepository) {}
+  constructor(@Inject(CoursesRepository) private readonly coursesRepository: CoursesRepository) {}
 
   async listCourses(): Promise<CourseSummaryDto[]> {
     const courses = await this.coursesRepository.findAll();

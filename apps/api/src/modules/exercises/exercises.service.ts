@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { Inject, Injectable, NotFoundException } from "@nestjs/common";
 
 import { toDomainExercise } from "./exercise.mapper";
 import { ExercisesRepository } from "./exercises.repository";
@@ -6,7 +6,9 @@ import { type ExerciseWithLesson } from "./exercises.repository";
 
 @Injectable()
 export class ExercisesService {
-  constructor(private readonly exercisesRepository: ExercisesRepository) {}
+  constructor(
+    @Inject(ExercisesRepository) private readonly exercisesRepository: ExercisesRepository
+  ) {}
 
   async getExerciseForAttempt(id: string): Promise<ExerciseWithLesson> {
     const exercise = await this.exercisesRepository.findByIdWithLesson(id);

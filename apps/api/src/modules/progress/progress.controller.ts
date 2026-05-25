@@ -1,10 +1,10 @@
-import { Controller, Get, Param } from "@nestjs/common";
+import { Controller, Get, Inject, Param } from "@nestjs/common";
 
 import { ProgressService } from "./progress.service";
 
 @Controller("progress")
 export class ProgressController {
-  constructor(private readonly progressService: ProgressService) {}
+  constructor(@Inject(ProgressService) private readonly progressService: ProgressService) {}
 
   @Get(":userId")
   getUserProgress(@Param("userId") userId: string) {

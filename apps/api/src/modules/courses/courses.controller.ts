@@ -1,10 +1,10 @@
-import { Controller, Get, Param } from "@nestjs/common";
+import { Controller, Get, Inject, Param } from "@nestjs/common";
 
 import { CoursesService } from "./courses.service";
 
 @Controller("courses")
 export class CoursesController {
-  constructor(private readonly coursesService: CoursesService) {}
+  constructor(@Inject(CoursesService) private readonly coursesService: CoursesService) {}
 
   @Get()
   listCourses() {

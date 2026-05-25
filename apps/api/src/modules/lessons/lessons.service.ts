@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { Inject, Injectable, NotFoundException } from "@nestjs/common";
 import type { LessonContent } from "@scientifica/domain";
 import { z } from "zod";
 
@@ -24,7 +24,7 @@ const lessonContentSchema = z.object({
 
 @Injectable()
 export class LessonsService {
-  constructor(private readonly lessonsRepository: LessonsRepository) {}
+  constructor(@Inject(LessonsRepository) private readonly lessonsRepository: LessonsRepository) {}
 
   async getLessonById(id: string): Promise<LessonDetailDto> {
     const lesson = await this.lessonsRepository.findById(id);

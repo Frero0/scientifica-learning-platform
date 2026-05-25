@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
 import type { Prisma, ProgressStatus as PrismaProgressStatus } from "@scientifica/db";
 
 import { PrismaService } from "../../common/prisma/prisma.service";
@@ -14,7 +14,7 @@ export type ProgressWithContent = Prisma.ProgressGetPayload<{
 
 @Injectable()
 export class ProgressRepository {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(@Inject(PrismaService) private readonly prisma: PrismaService) {}
 
   findByUserId(userId: string): Promise<ProgressWithContent[]> {
     return this.prisma.progress.findMany({
