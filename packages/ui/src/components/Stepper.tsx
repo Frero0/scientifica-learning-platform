@@ -24,7 +24,7 @@ export function Stepper({ className, currentStep, steps }: StepperProps) {
             <span
               aria-hidden="true"
               className={cn(
-                "mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full border text-xs font-semibold",
+                "mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full border text-xs font-semibold transition",
                 isComplete && "border-teal-700 bg-teal-700 text-white",
                 isActive && "border-ink bg-ink text-white",
                 !isComplete && !isActive && "border-ink/15 bg-white text-ink/55"

@@ -14,11 +14,12 @@ export type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
 
 const variants: Record<ButtonVariant, string> = {
   primary:
-    "bg-ink text-white shadow-[0_14px_30px_rgba(20,22,20,0.16)] hover:bg-black focus-visible:outline-ink",
+    "bg-ink text-white shadow-[0_14px_30px_rgba(20,22,20,0.16)] hover:-translate-y-0.5 hover:bg-black focus-visible:outline-teal-700",
   secondary:
-    "border border-ink/10 bg-white text-ink hover:border-ink/20 hover:bg-stone-50 focus-visible:outline-ink",
-  ghost: "text-ink hover:bg-ink/5 focus-visible:outline-ink",
-  danger: "bg-red-600 text-white hover:bg-red-700 focus-visible:outline-red-700"
+    "border border-ink/10 bg-white text-ink shadow-[inset_0_1px_0_rgba(255,255,255,0.7)] hover:-translate-y-0.5 hover:border-ink/20 hover:bg-stone-50 focus-visible:outline-teal-700",
+  ghost: "text-ink hover:bg-ink/5 focus-visible:outline-teal-700",
+  danger:
+    "bg-red-600 text-white shadow-[0_14px_30px_rgba(220,38,38,0.18)] hover:-translate-y-0.5 hover:bg-red-700 focus-visible:outline-red-700"
 };
 
 const sizes: Record<ButtonSize, string> = {

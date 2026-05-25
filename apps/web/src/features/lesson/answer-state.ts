@@ -1,13 +1,17 @@
-import type { PublicExercise } from "@/lib/types";
-
 export type AnswerState = Record<string, unknown>;
 
-export function getStoredAnswer(answerState: AnswerState, exercise: PublicExercise): unknown {
+type AnswerableExercise = {
+  id: string;
+  exerciseType: string;
+  steps?: readonly unknown[];
+};
+
+export function getStoredAnswer(answerState: AnswerState, exercise: AnswerableExercise): unknown {
   return answerState[exercise.id] ?? getEmptyAnswer(exercise);
 }
 
-export function getEmptyAnswer(exercise: PublicExercise): unknown {
-  if (exercise.type === "step_by_step") {
+export function getEmptyAnswer(exercise: AnswerableExercise): unknown {
+  if (exercise.exerciseType === "step_by_step") {
     return {
       steps: exercise.steps?.map(() => "") ?? []
     };
@@ -29,7 +33,7 @@ export function withExerciseAnswer(
 
 export function withStepAnswer(
   answerState: AnswerState,
-  exercise: PublicExercise,
+  exercise: AnswerableExercise,
   stepIndex: number,
   value: string
 ): AnswerState {

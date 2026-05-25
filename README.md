@@ -61,6 +61,12 @@ Seeded demo content:
 - Demo route: `http://localhost:3000/lessons/demo`
 - Demo user id: `demo-user`
 
+Frontend learning-path data is loaded from the Nest API through `API_BASE_URL` on the server side.
+The course detail and lesson player consume:
+
+- `GET /courses/:id/path`
+- `GET /lessons/:id/player`
+
 ## Architecture Summary
 
 The frontend does not evaluate exercises. It renders lesson state, sends answers through a Next route handler, and displays the API response.

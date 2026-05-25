@@ -5,14 +5,26 @@ import { cn } from "../lib/cn";
 export type ProgressBarProps = HTMLAttributes<HTMLDivElement> & {
   value: number;
   label?: string;
+  showValue?: boolean;
 };
 
-export function ProgressBar({ className, label, value, ...props }: ProgressBarProps) {
+export function ProgressBar({
+  className,
+  label,
+  showValue = false,
+  value,
+  ...props
+}: ProgressBarProps) {
   const boundedValue = Math.max(0, Math.min(100, value));
 
   return (
     <div className={cn("space-y-2", className)} {...props}>
-      {label ? <div className="text-sm font-medium text-ink">{label}</div> : null}
+      {label || showValue ? (
+        <div className="flex items-center justify-between gap-3 text-sm font-medium text-ink">
+          {label ? <span>{label}</span> : <span>Progress</span>}
+          {showValue ? <span className="tabular-nums text-ink/55">{boundedValue}%</span> : null}
+        </div>
+      ) : null}
       <div
         aria-label={label ?? "Progress"}
         aria-valuemax={100}

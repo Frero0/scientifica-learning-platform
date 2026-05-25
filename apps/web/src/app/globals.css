@@ -6,6 +6,16 @@
   color-scheme: light;
   background: #f6f7f2;
   color: #141614;
+  --surface-paper: #f6f7f2;
+  --surface-cream: #fffdf6;
+  --surface-mist: #e7eae2;
+  --surface-white: #ffffff;
+  --ink: #141614;
+  --ink-muted: rgba(20, 22, 20, 0.64);
+  --line: rgba(20, 22, 20, 0.1);
+  --accent: #0f766e;
+  --accent-strong: #115e59;
+  --copper: #b66a2c;
 }
 
 * {
@@ -18,7 +28,9 @@ html {
 
 body {
   margin: 0;
-  background: #f6f7f2;
+  background:
+    radial-gradient(circle at top left, rgba(15, 118, 110, 0.08), transparent 28rem),
+    linear-gradient(180deg, #fffdf6 0%, #f6f7f2 38rem);
   color: #141614;
   font-family:
     Inter,
@@ -28,6 +40,16 @@ body {
     BlinkMacSystemFont,
     "Segoe UI",
     sans-serif;
+}
+
+a {
+  text-decoration-thickness: 0.08em;
+  text-underline-offset: 0.18em;
+}
+
+:focus-visible {
+  outline: 2px solid #0f766e;
+  outline-offset: 3px;
 }
 
 button,
@@ -82,8 +104,23 @@ textarea {
   }
 }
 
+@keyframes soft-enter {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.99);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
 .animate-rise-in {
   animation: rise-in 700ms ease-out both;
+}
+
+.animate-soft-enter {
+  animation: soft-enter 420ms ease-out both;
 }
 
 .field-node {
@@ -96,5 +133,6 @@ textarea {
 
 .pendulum-arm {
   animation: pendulum-swing 3.4s ease-in-out infinite;
-  transform-origin: 128px 42px;
+  transform-box: fill-box;
+  transform-origin: top center;
 }

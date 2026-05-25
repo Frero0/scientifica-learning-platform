@@ -2,6 +2,7 @@ export { Badge, type BadgeProps } from "./components/Badge";
 export { Button, type ButtonProps } from "./components/Button";
 export { Card, type CardProps } from "./components/Card";
 export { ExerciseShell, type ExerciseShellProps } from "./components/ExerciseShell";
+export { EmptyState, type EmptyStateProps } from "./components/EmptyState";
 export { FeedbackPanel, type FeedbackPanelProps } from "./components/FeedbackPanel";
 export { LessonCard, type LessonCardProps } from "./components/LessonCard";
 export { ProgressBar, type ProgressBarProps } from "./components/ProgressBar";

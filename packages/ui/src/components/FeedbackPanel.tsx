@@ -21,7 +21,7 @@ export function FeedbackPanel({
   ...props
 }: FeedbackPanelProps) {
   return (
-    <div className={cn("rounded-lg border p-4", statusStyles[status], className)} {...props}>
+    <div className={cn("rounded-xl border p-5", statusStyles[status], className)} {...props}>
       <h3 className="font-semibold">{title}</h3>
       {children ? <div className="mt-2 text-sm leading-6 opacity-80">{children}</div> : null}
     </div>
