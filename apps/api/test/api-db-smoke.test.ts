@@ -54,6 +54,70 @@ type UserProgressResponse = {
   items: ProgressItem[];
 };
 
+type CoursePathResponse = {
+  id: string;
+  slug: string;
+  difficulty: string;
+  levels: Array<{
+    id: string;
+    title: string;
+    lessons: Array<{
+      id: string;
+      steps: Array<{
+        id: string;
+        type: string;
+        order: number;
+        exercise?: {
+          id: string;
+          type: string;
+          prompt: string;
+        };
+      }>;
+    }>;
+  }>;
+};
+
+type LessonPlayerResponse = {
+  id: string;
+  course: {
+    slug: string;
+  };
+  progress: {
+    currentStepId?: string;
+    completedStepIds: string[];
+    status: string;
+    exercises: Array<{
+      exerciseId: string;
+      stepId: string;
+      status: string;
+    }>;
+  };
+  steps: Array<{
+    id: string;
+    type: string;
+    order: number;
+    progress: {
+      status: string;
+      locked: boolean;
+      current: boolean;
+      completed: boolean;
+    };
+    content?: {
+      kind: string;
+    };
+    quiz?: {
+      id: string;
+      exerciseType: string;
+      prompt: string;
+    };
+    exercise?: {
+      id: string;
+      exerciseType: string;
+      prompt: string;
+    };
+  }>;
+};
+
 describe("API database-backed smoke tests", () => {
   let app: INestApplication | undefined;
   let baseUrl: string;
@@ -113,6 +177,88 @@ describe("API database-backed smoke tests", () => {
       points: 10
     });
     expect(firstExercise).not.toHaveProperty("correctAnswer");
+  });
+
+  it("returns a course path DTO with levels and composed steps", async () => {
+    const { response, payload } = await requestJson<CoursePathResponse>(
+      "/courses/course-scientific-thinking/path"
+    );
+
+    expect(response.status).toBe(200);
+    expect(payload).toMatchObject({
+      id: "course-scientific-thinking",
+      slug: demoCourseSlug,
+      difficulty: "beginner"
+    });
+    expect(payload.levels[0]).toMatchObject({
+      title: "Thinking Like a Scientist"
+    });
+
+    const steps = payload.levels[0]?.lessons[0]?.steps;
+
+    expect(steps?.map((step) => step.type)).toEqual([
+      "intro",
+      "concept",
+      "visual_model",
+      "exercise",
+      "exercise",
+      "exercise"
+    ]);
+    expect(steps?.map((step) => step.order)).toEqual([1, 2, 3, 4, 5, 6]);
+    expect(steps?.find((step) => step.exercise?.id === demoExerciseId)).toMatchObject({
+      type: "exercise",
+      exercise: {
+        id: demoExerciseId,
+        type: "multiple_choice"
+      }
+    });
+  });
+
+  it("returns a lesson player DTO with discriminated player steps", async () => {
+    const { response, payload } = await requestJson<LessonPlayerResponse>(
+      `/lessons/${demoLessonId}/player`
+    );
+
+    expect(response.status).toBe(200);
+    expect(payload).toMatchObject({
+      id: demoLessonId,
+      course: {
+        slug: demoCourseSlug
+      },
+      progress: {
+        currentStepId: `${demoLessonId}-intro`,
+        completedStepIds: [],
+        status: "available"
+      }
+    });
+    expect(payload.steps.map((step) => step.type)).toEqual([
+      "content",
+      "content",
+      "content",
+      "quiz",
+      "exercise",
+      "exercise"
+    ]);
+    expect(payload.steps.map((step) => step.order)).toEqual([1, 2, 3, 4, 5, 6]);
+    expect(payload.steps[0]).toMatchObject({
+      type: "content",
+      content: {
+        kind: "intro"
+      },
+      progress: {
+        current: true,
+        locked: false
+      }
+    });
+    expect(payload.steps.find((step) => step.quiz?.id === demoExerciseId)).toMatchObject({
+      type: "quiz",
+      quiz: {
+        id: demoExerciseId,
+        exerciseType: "multiple_choice"
+      }
+    });
+    expect(JSON.stringify(payload)).not.toContain("answer");
+    expect(JSON.stringify(payload)).not.toContain("expectedAnswer");
   });
 
   it("records a valid attempt and exposes updated progress", async () => {

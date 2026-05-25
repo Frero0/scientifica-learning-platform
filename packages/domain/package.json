@@ -9,6 +9,11 @@
       "types": "./dist/index.d.ts",
       "require": "./dist/index.js",
       "default": "./dist/index.js"
+    },
+    "./learning": {
+      "types": "./dist/learning/index.d.ts",
+      "require": "./dist/learning/index.js",
+      "default": "./dist/learning/index.js"
     }
   },
   "scripts": {

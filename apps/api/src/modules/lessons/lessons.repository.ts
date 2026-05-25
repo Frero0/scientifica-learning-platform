@@ -20,6 +20,15 @@ export type LessonDetailRecord = Prisma.LessonGetPayload<{
   include: typeof lessonDetailInclude;
 }>;
 
+export type LessonPlayerProgressRecord = {
+  lessonId: string | null;
+  completedExercises: number;
+  totalExercises: number;
+  percent: number;
+  status: string;
+  lastExerciseId: string | null;
+};
+
 @Injectable()
 export class LessonsRepository {
   constructor(@Inject(PrismaService) private readonly prisma: PrismaService) {}
@@ -31,5 +40,57 @@ export class LessonsRepository {
       },
       include: lessonDetailInclude
     });
+  }
+
+  findLessonProgress(userId: string, lessonId: string): Promise<LessonPlayerProgressRecord | null> {
+    return this.prisma.progress.findFirst({
+      where: {
+        userId,
+        lessonId
+      },
+      select: {
+        lessonId: true,
+        completedExercises: true,
+        totalExercises: true,
+        percent: true,
+        status: true,
+        lastExerciseId: true
+      }
+    });
+  }
+
+  async findAttemptedExerciseIdsForLesson(userId: string, lessonId: string): Promise<string[]> {
+    const attempts = await this.prisma.exerciseAttempt.findMany({
+      where: {
+        userId,
+        exercise: {
+          lessonId
+        }
+      },
+      distinct: ["exerciseId"],
+      select: {
+        exerciseId: true
+      }
+    });
+
+    return attempts.map((attempt) => attempt.exerciseId);
+  }
+
+  async findCompletedExerciseIdsForLesson(userId: string, lessonId: string): Promise<string[]> {
+    const attempts = await this.prisma.exerciseAttempt.findMany({
+      where: {
+        userId,
+        correct: true,
+        exercise: {
+          lessonId
+        }
+      },
+      distinct: ["exerciseId"],
+      select: {
+        exerciseId: true
+      }
+    });
+
+    return attempts.map((attempt) => attempt.exerciseId);
   }
 }

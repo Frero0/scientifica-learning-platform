@@ -66,7 +66,9 @@ Avoid these dependencies:
 6. Domain functions such as `evaluateExerciseAttempt` evaluate learning logic without framework
    dependencies.
 7. API services persist attempts, progress, and achievements, then return DTOs.
-8. The frontend renders returned state and does not evaluate answers directly.
+8. Lesson player reads use an explicit boundary:
+   `persistence -> domain/application mapper -> API DTO -> future UI renderer`.
+9. The frontend renders returned state and does not evaluate answers directly.
 
 The current interactive lesson flow uses a Next route handler as a frontend boundary for attempt
 submission, then forwards the request to the Nest API.
@@ -113,7 +115,8 @@ Current tests are intentionally small:
 
 - Domain unit tests cover `evaluateExerciseAttempt`.
 - API smoke tests verify `/health` and the seeded database-backed path through `/courses`,
-  `/lessons/:id`, `/attempts`, and `/progress/:userId`.
+  `/courses/:id/path`, `/lessons/:id`, `/lessons/:id/player`, `/attempts`, and
+  `/progress/:userId`.
 
 ## Product Architecture Principles
 
@@ -121,10 +124,15 @@ Current tests are intentionally small:
 - Add persistence changes in `packages/db` with migrations and keep database records behind API
   repository boundaries.
 - Add API workflows in `apps/api` through controllers, services, repositories, schemas, and DTOs.
+- Keep API learning mappers pure and isolated: services load Prisma records through repositories,
+  then mappers compose stable DTOs such as `CoursePathDto` and `LessonPlayerDto` without fetching
+  from the database.
 - Add frontend behavior in `apps/web`; keep data fetching and mutation paths explicit.
 - Promote UI to `packages/ui` only when it is reusable and presentation-only.
 - Prefer focused tests at the package boundary where the behavior lives.
 - Keep the monorepo boring: no new package, dependency, or abstraction without a concrete need.
+- Use `docs/db-api-learning-mapping.md` as the decision source for mapping
+  `Subject -> Course -> Level -> Lesson -> Step` onto current DB/API entities.
 
 ## Current Gaps
 

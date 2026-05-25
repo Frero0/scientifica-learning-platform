@@ -1,9 +1,10 @@
 import { Inject, Injectable, NotFoundException } from "@nestjs/common";
 
 import { toDomainCourseLevel } from "../../common/mappers/prisma-domain.mapper";
+import { mapCourseToCoursePathDto } from "./course-path.mapper";
 import { CoursesRepository } from "./courses.repository";
 import { type CourseWithPath } from "./courses.repository";
-import type { CourseDetailDto, CourseSummaryDto } from "./courses.types";
+import type { CourseDetailDto, CoursePathDto, CourseSummaryDto } from "./courses.types";
 
 @Injectable()
 export class CoursesService {
@@ -39,6 +40,34 @@ export class CoursesService {
         }))
       }))
     };
+  }
+
+  async getCoursePathById(id: string, userId?: string): Promise<CoursePathDto> {
+    const course = await this.coursesRepository.findByIdWithLearningPath(id);
+
+    if (!course) {
+      throw new NotFoundException(`Course with id "${id}" was not found.`);
+    }
+
+    const progressInput = userId
+      ? await Promise.all([
+          this.coursesRepository.findLessonProgressForCourse(userId, course.id),
+          this.coursesRepository.findCompletedExerciseIdsForCourse(userId, course.id),
+          this.coursesRepository.findAttemptedExerciseIdsForCourse(userId, course.id)
+        ]).then(([lessonProgress, completedExerciseIds, attemptedExerciseIds]) => ({
+          lessonProgress,
+          completedExerciseIds,
+          attemptedExerciseIds
+        }))
+      : undefined;
+
+    return mapCourseToCoursePathDto(
+      {
+        ...course,
+        difficulty: toDomainCourseLevel(course.level)
+      },
+      progressInput
+    );
   }
 
   private toSummaryDto(course: CourseWithPath): CourseSummaryDto {

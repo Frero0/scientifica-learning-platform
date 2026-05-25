@@ -1,4 +1,4 @@
-import { Controller, Get, Inject, Param } from "@nestjs/common";
+import { Controller, Get, Inject, Param, Query } from "@nestjs/common";
 
 import { CoursesService } from "./courses.service";
 
@@ -9,6 +9,11 @@ export class CoursesController {
   @Get()
   listCourses() {
     return this.coursesService.listCourses();
+  }
+
+  @Get(":id/path")
+  getCoursePathById(@Param("id") id: string, @Query("userId") userId?: string) {
+    return this.coursesService.getCoursePathById(id, userId);
   }
 
   @Get(":slug")

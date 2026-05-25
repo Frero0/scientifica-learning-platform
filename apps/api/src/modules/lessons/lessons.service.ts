@@ -3,8 +3,10 @@ import type { LessonContent } from "@scientifica/domain";
 import { z } from "zod";
 
 import { toPublicExercise } from "../exercises/exercise.mapper";
+import { mapLessonToLessonPlayerDto } from "./lesson-player.mapper";
 import { LessonsRepository } from "./lessons.repository";
 import { type LessonDetailRecord } from "./lessons.repository";
+import type { LessonPlayerDto } from "./lesson-player.types";
 import type { LessonDetailDto } from "./lessons.types";
 
 const lessonContentSchema = z.object({
@@ -34,6 +36,28 @@ export class LessonsService {
     }
 
     return this.toDto(lesson);
+  }
+
+  async getLessonPlayerById(id: string, userId?: string): Promise<LessonPlayerDto> {
+    const lesson = await this.lessonsRepository.findById(id);
+
+    if (!lesson) {
+      throw new NotFoundException(`Lesson with id "${id}" was not found.`);
+    }
+
+    const progressInput = userId
+      ? await Promise.all([
+          this.lessonsRepository.findLessonProgress(userId, lesson.id),
+          this.lessonsRepository.findCompletedExerciseIdsForLesson(userId, lesson.id),
+          this.lessonsRepository.findAttemptedExerciseIdsForLesson(userId, lesson.id)
+        ]).then(([lessonProgress, completedExerciseIds, attemptedExerciseIds]) => ({
+          ...(lessonProgress ? { lessonProgress } : {}),
+          completedExerciseIds,
+          attemptedExerciseIds
+        }))
+      : undefined;
+
+    return mapLessonToLessonPlayerDto(lesson, progressInput);
   }
 
   private toDto(lesson: LessonDetailRecord): LessonDetailDto {
