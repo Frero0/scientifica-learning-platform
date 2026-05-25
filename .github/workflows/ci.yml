@@ -61,6 +61,9 @@ jobs:
       - name: Seed database
         run: pnpm db:seed
 
+      - name: Test
+        run: pnpm test
+
       - name: Lint
         run: pnpm lint
 
